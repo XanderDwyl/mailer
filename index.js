@@ -3,7 +3,6 @@
 var Hapi          = require( 'hapi' );
 var nodemailer    = require( 'nodemailer' );
 var pack          = require( './package' );
-var _error        = Hapi.error;
 
 var server   = new Hapi.Server( {
 	'debug' : {
@@ -14,22 +13,28 @@ var server   = new Hapi.Server( {
 var PORT = process.env.PORT || 3000;
 
 // set server connection
-server.connection( {
-	'host' : 'localhost',
-	'port' : PORT
-} );
+if ( process.env.PORT ) {
+	server.connection( {
+		'port' : PORT
+	} );
+} else {
+	server.connection( {
+		'host' : 'localhost',
+		'port' : PORT
+	} );
+}
 
 var routes = [
 	{
 		'method'  : 'GET',
 		'path'    : '/',
 		'handler' : function ( request, reply ) {
-			reply( pack.name.toUpperCase() + ' ' + pack.version + '<br><i>' + pack.description + '</i>' );
+			reply( pack.name.toUpperCase() + ' ' + pack.version + '<br><i>' + pack.description + ' ' + pack.dependencies.nodemailer.replace( '^', '' ) + '</i>' );
 		}
 	},
 	{
 		'method'  : 'POST',
-		'path'    : '/',
+		'path'    : '/{recipient}',
 		'handler' : function ( request, reply ) {
 
 			var payload     = request.payload;
@@ -39,7 +44,7 @@ var routes = [
 
 			var mailOptions = {
 				from                 : payload.email,
-				to                   : 'janderbacalso@gmail.com',
+				to                   : request.params.recipient,
 				subject              : payload.subject,
 				generateTextFromHTML : true,
 				html                 : payload.message
@@ -61,12 +66,13 @@ var routes = [
 	}
 ];
 
-var start = function ( err ) {
+var _error = Hapi.error;
+var start = function ( err, reply ) {
 	if ( err ) {
-		return _error.badRequest( 'Unable to start server.' );
+		return _error.badRequest( 'Unable to start server.' + err );
 	}
 
-	console.log( 'Server started at : ' + server.info.uri );
+	console.log( 'Server listening on port ' + server.info.uri );
 };
 
 server.route( routes );
