@@ -39,7 +39,7 @@ var routes = [
 
 			var mailOptions = {
 				from                 : payload.email,
-				to                   : 'janderbacalso',
+				to                   : 'janderbacalso@gmail.com',
 				subject              : payload.subject,
 				generateTextFromHTML : true,
 				html                 : payload.message
@@ -51,7 +51,7 @@ var routes = [
 					console.log( error );
 					reply( error );
 				} else {
-					console.log( 'Message sent from: ' + payload.fullname );
+					console.log( 'Message sent from: ' + payload.fullname + ' <' + payload.email + '>' );
 					reply( 'Message sent successfully!' );
 				}
 
