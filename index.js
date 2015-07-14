@@ -11,10 +11,12 @@ var server   = new Hapi.Server( {
 	}
 } );
 
+var PORT = process.env.PORT || 3000;
+
 // set server connection
 server.connection( {
-	'host' : process.env.APP_HOST || 'localhost',
-	'port' : process.env.APP_HOST || 3000
+	'host' : 'localhost',
+	'port' : PORT
 } );
 
 var routes = [
