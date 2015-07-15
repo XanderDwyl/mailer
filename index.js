@@ -15,7 +15,12 @@ var PORT = process.env.PORT || 3000;
 // set server connection
 if ( process.env.PORT ) {
 	server.connection( {
-		'port' : PORT
+		'port'   : PORT,
+		'routes' : {
+			'cors' : {
+				'credentials' : true
+			}
+		}
 	} );
 } else {
 	server.connection( {
