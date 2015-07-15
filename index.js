@@ -45,10 +45,10 @@ var routes = [
 			var payload     = request.payload;
 			var transporter = nodemailer.createTransport();
 
-			payload.message += '<br><br>Cheers,<br><br>' + payload.fullname;
+			payload.message += '<br><br>Cheers,<br><br>' + payload.fullname + '<br>' + payload.email;
 
 			var mailOptions = {
-				from                 : payload.email,
+				from                 : 'bjscontactus@gmail.com',
 				to                   : request.params.recipient,
 				subject              : payload.subject,
 				generateTextFromHTML : true,
